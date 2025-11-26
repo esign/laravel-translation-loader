@@ -254,10 +254,10 @@ final class TranslationTest extends TestCase
         // such as "Illuminate\Contracts\Container\BindingResolutionException: Target class [config] does not exist".
         $this->refreshApplication();
 
-        $this->assertEquals(trans('auth.password'), 'The provided password is incorrect.');
-        $this->assertEquals(trans('pagination.next'), 'Next &raquo;');
-        $this->assertEquals(trans('passwords.reset'), 'Your password has been reset.');
-        $this->assertEquals(trans('validation.accepted'), 'The :attribute field must be accepted.');
+        $this->assertEquals('The provided password is incorrect.', trans('auth.password'));
+        $this->assertEquals('Next &raquo;', trans('pagination.next'));
+        $this->assertEquals('Your password has been reset.', trans('passwords.reset'));
+        $this->assertEquals('The :attribute field must be accepted.', trans('validation.accepted'));
     }
 
     #[Test]
@@ -268,6 +268,6 @@ final class TranslationTest extends TestCase
         // such as "Illuminate\Contracts\Container\BindingResolutionException: Target class [config] does not exist".
         $this->refreshApplication();
 
-        $this->assertEquals(trans('validation.active_url'), 'Custom - The :attribute field must be a valid URL.');
+        $this->assertEquals('Custom - The :attribute field must be a valid URL.', trans('validation.active_url'));
     }
 }
