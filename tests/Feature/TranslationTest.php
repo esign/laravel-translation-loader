@@ -8,6 +8,7 @@ use Esign\TranslationLoader\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Orchestra\Testbench\Attributes\UsesVendor;
 
 final class TranslationTest extends TestCase
 {
@@ -243,5 +244,30 @@ final class TranslationTest extends TestCase
         });
 
         $this->assertEquals('en value', trans('file.key'));
+    }
+
+    #[Test]
+    #[UsesVendor]
+    public function it_can_load_default_file_translations_from_the_framework(): void
+    {
+        // When using the UsesVendor attribute, refresh the application to prevent container resolution errors,
+        // such as "Illuminate\Contracts\Container\BindingResolutionException: Target class [config] does not exist".
+        $this->refreshApplication();
+
+        $this->assertEquals('The provided password is incorrect.', trans('auth.password'));
+        $this->assertEquals('Next &raquo;', trans('pagination.next'));
+        $this->assertEquals('Your password has been reset.', trans('passwords.reset'));
+        $this->assertEquals('The :attribute field must be accepted.', trans('validation.accepted'));
+    }
+
+    #[Test]
+    #[UsesVendor]
+    public function it_can_override_default_file_translations_from_the_framework(): void
+    {
+        // When using the UsesVendor attribute, refresh the application to prevent container resolution errors,
+        // such as "Illuminate\Contracts\Container\BindingResolutionException: Target class [config] does not exist".
+        $this->refreshApplication();
+
+        $this->assertEquals('Custom - The :attribute field must be a valid URL.', trans('validation.active_url'));
     }
 }
