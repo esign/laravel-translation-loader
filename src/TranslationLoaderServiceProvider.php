@@ -46,7 +46,10 @@ class TranslationLoaderServiceProvider extends BaseTranslationServiceProvider
         $this->app->singleton('translation.loader', function ($app) {
             $aggregateLoader = config('translation-loader.aggregate_loader') ?? AggregateLoader::class;
 
-            return new $aggregateLoader($app['files'], $app['path.lang']);
+            return new $aggregateLoader($app['files'], [
+                base_path('vendor/laravel/framework/src/Illuminate/Translation/lang'),
+                $app['path.lang'],
+            ]);
         });
     }
 
