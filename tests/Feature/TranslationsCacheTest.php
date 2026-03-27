@@ -109,4 +109,24 @@ final class TranslationsCacheTest extends TestCase
 
         $this->assertQueryCount(4);
     }
+
+    #[Test]
+    public function it_can_restore_translations_from_old_cached_collection_objects(): void
+    {
+        // Create a database translation with a value
+        Translation::query()->create(['group' => '*', 'key' => 'test-key', 'value_en' => 'Test Value']);
+
+        // Simulate old cached data as a Collection (the old behavior before array caching)
+        // by using remember() which caches and returns the Collection directly
+        $this->translationsCache->remember(fn () => Translation::query()->get());
+
+        // Reset the internal translator cache to force re-fetching from the database cache
+        $this->resetInternalTranslatorCache();
+
+        // Request the translation - this should work even though the cache contains a Collection instead of an array
+        $result = trans('test-key');
+
+        // The translation should still work and return the cached value
+        $this->assertEquals('Test Value', $result);
+    }
 }

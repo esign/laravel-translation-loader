@@ -201,22 +201,6 @@ php artisan translations:import-files-to-database --locales=en,nl --overwrite
 
 ### FAQ
 <details>
-<summary>Laravel 13 compatibility issue with cache serialization</summary>
-
-Laravel 13 introduced a `serializable_classes` option in the default `config/cache.php` file. When this is set to `false`, the package will not work correctly because the cached translations (which use Eloquent Collections) cannot be serialized properly.
-
-To fix this, update your `config/cache.php` file as follows:
-
-```diff
--'serializable_classes' => false,
-+'serializable_classes' => [
-+    \Illuminate\Database\Eloquent\Collection::class,
-+],
-```
-
-</details>
-
-<details>
 <summary>Installation conflict with [mcamara/laravel-localization](https://github.com/mcamara/laravel-localization)</summary>
 
 The laravel-localization package offers route translation functionality by leveraging Laravel's translator.
