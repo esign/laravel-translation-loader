@@ -96,6 +96,42 @@ final class ImportFileTranslationToDatabaseCommandTest extends TestCase
     }
 
     #[Test]
+    public function it_can_import_translations_registered_by_packages(): void
+    {
+        // Arrange
+        $this->app['translator']->addJsonPath(__DIR__ . '/../../fixtures/package-lang');
+
+        // Act
+        $this->artisan(ImportFileTranslationsToDatabaseCommand::class, ['--locales' => 'en,nl']);
+
+        // Assert
+        $this->assertDatabaseHas(Translation::class, [
+            'group' => '*',
+            'key' => 'Hello package',
+            'value_en' => 'Hello package',
+            'value_nl' => 'Hallo pakket',
+        ]);
+    }
+
+    #[Test]
+    public function it_prefers_application_translations_over_package_translations(): void
+    {
+        // Arrange
+        $this->app['translator']->addJsonPath(__DIR__ . '/../../fixtures/package-lang');
+
+        // Act
+        $this->artisan(ImportFileTranslationsToDatabaseCommand::class, ['--locales' => 'en,nl']);
+
+        // Assert
+        $this->assertDatabaseHas(Translation::class, [
+            'group' => '*',
+            'key' => 'Hello world',
+            'value_en' => 'Hello world',
+            'value_nl' => 'Hallo wereld',
+        ]);
+    }
+
+    #[Test]
     public function it_can_report_the_affected_records(): void
     {
         $command = $this->artisan(ImportFileTranslationsToDatabaseCommand::class, ['--locales' => 'en']);

@@ -13,6 +13,10 @@ class ImportFileTranslationsToDatabaseAction
     public function __construct()
     {
         $this->fileLoader = new FileLoader(app('files'), app('path.lang'));
+
+        foreach (app('translation.loader')->jsonPaths() as $jsonPath) {
+            $this->fileLoader->addJsonPath($jsonPath);
+        }
     }
 
     public function handle(array $locales, bool $overwrite): int
